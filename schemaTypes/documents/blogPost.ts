@@ -159,8 +159,11 @@ export default defineType({
       name: 'metaTitle',
       title: 'Meta Title',
       type: 'string',
-      options: {aiAssist: {exclude: true}},
-      description: 'Override the document title for search engines (50–60 characters)',
+      options: {
+        aiAssist: {},
+      },
+      description:
+        'Override the document title for search engines (50–60 characters). AI: Create SEO title using list of keywords, Body, and SEO best practices in fewer than 60 characters.',
       validation: (Rule) => Rule.max(60).warning('Keep meta titles under 60 characters'),
       group: 'metadata',
     }),
@@ -169,8 +172,11 @@ export default defineType({
       title: 'Meta Description',
       type: 'text',
       rows: 3,
-      options: {aiAssist: {exclude: true}},
-      description: 'Brief description for search engines (120–160 characters)',
+      options: {
+        aiAssist: {},
+      },
+      description:
+        'Brief description for search engines (120–160 characters). AI: Create SEO description using list of keywords, Body, and SEO best practices in fewer than 160 characters.',
       validation: (Rule) =>
         Rule.max(160)
           .min(120)
