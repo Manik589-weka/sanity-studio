@@ -9,15 +9,13 @@ export default defineType({
   icon: FiEdit,
   groups: [
     {name: 'content', title: 'Content', default: true},
-    {name: 'meta', title: 'Metadata'},
-    {name: 'seo', title: 'SEO'},
-    {name: 'migration', title: 'Migration'},
+    {name: 'metadata', title: 'Metadata'},
   ],
   fields: [
-    // Status fields
+    // ─── Content (1–10) ─────────────────────────────────────────────────────
     defineField({
       name: 'status',
-      title: 'Dev Status',
+      title: 'Migration Status',
       type: 'string',
       options: {
         list: [
@@ -28,12 +26,11 @@ export default defineType({
         ],
         layout: 'dropdown',
       },
-      group: 'meta',
+      group: 'content',
     }),
-    // Content fields
     defineField({
       name: 'title',
-      title: 'Blog Post Title',
+      title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required().max(142),
       group: 'content',
@@ -47,6 +44,15 @@ export default defineType({
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
+      group: 'content',
+    }),
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: [{type: 'person'}],
+      validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'featuredImage',
@@ -134,37 +140,90 @@ export default defineType({
       group: 'content',
     }),
 
-    // Metadata fields
-    defineField({
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: [{type: 'person'}],
-      validation: (Rule) => Rule.required(),
-      group: 'meta',
-    }),
+    // ─── Metadata (11–16 + hidden OG) ───────────────────────────────────────
     defineField({
       name: 'publishedAt',
-      title: 'Published At',
+      title: 'Published Date',
       type: 'datetime',
       validation: (Rule) => Rule.required(),
-      group: 'meta',
+      group: 'metadata',
     }),
-    
-    // SEO fields
     defineField({
-      name: 'seo',
-      title: 'SEO',
-      type: 'seo',
-      group: 'seo',
+      name: 'metaTitle',
+      title: 'Meta Title',
+      type: 'string',
+      description: 'Override the document title for search engines (50–60 characters)',
+      validation: (Rule) => Rule.max(60).warning('Keep meta titles under 60 characters'),
+      group: 'metadata',
     }),
-
-    // Migration fields
+    defineField({
+      name: 'metaDescription',
+      title: 'Meta Description',
+      type: 'text',
+      rows: 3,
+      description: 'Brief description for search engines (120–160 characters)',
+      validation: (Rule) =>
+        Rule.max(160)
+          .min(120)
+          .warning('Meta descriptions should be between 120–160 characters'),
+      group: 'metadata',
+    }),
+    defineField({
+      name: 'canonicalUrl',
+      title: 'Canonical URL',
+      type: 'url',
+      description: 'Set if this content is duplicated elsewhere',
+      group: 'metadata',
+    }),
+    defineField({
+      name: 'lastUpdatedAt',
+      title: 'Last Updated Date',
+      type: 'datetime',
+      description: 'When this post was last updated',
+      group: 'metadata',
+    }),
+    defineField({
+      name: 'noIndex',
+      title: 'No Index and No Follow?',
+      type: 'boolean',
+      description: 'Prevent this page from appearing in search engines',
+      initialValue: false,
+      group: 'metadata',
+    }),
+    // Hidden OG fields (mapped from Featured image / Meta title / Meta description at display time)
+    defineField({
+      name: 'ogImage',
+      title: 'OG Image',
+      type: 'image',
+      description: 'Defaults to Featured image when empty',
+      options: {hotspot: true},
+      hidden: () => true,
+      group: 'metadata',
+    }),
+    defineField({
+      name: 'ogTitle',
+      title: 'OG Title',
+      type: 'string',
+      description: 'Defaults to Meta title when empty',
+      hidden: () => true,
+      group: 'metadata',
+    }),
+    defineField({
+      name: 'ogDescription',
+      title: 'OG Description',
+      type: 'text',
+      rows: 2,
+      description: 'Defaults to Meta description when empty',
+      hidden: () => true,
+      group: 'metadata',
+    }),
+    // Kept in metadata (hidden) so existing migration data is not lost
     defineField({
       name: 'migrationData',
       title: 'Migration Data',
       type: 'migrationMetadata',
-      group: 'migration',
+      hidden: () => true,
+      group: 'metadata',
     }),
   ],
   preview: {
