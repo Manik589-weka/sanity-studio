@@ -89,7 +89,7 @@ export default defineType({
     }),
     defineField({
       name: 'excerpt',
-      title: 'Excerpt',
+      title: 'Summary',
       type: 'array',
       options: {
         aiAssist: {},
