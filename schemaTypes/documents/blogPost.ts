@@ -246,6 +246,14 @@ export default defineType({
       hidden: () => true,
       group: 'metadata',
     }),
+    // Legacy: hidden so old docs with seo object don’t show "Unknown field". Map: seo.metaTitle → metaTitle, seo.metaDescription → metaDescription. Run scripts/migrate-seo-to-meta.ts to copy values.
+    defineField({
+      name: 'seo',
+      title: 'SEO (legacy)',
+      type: 'seo',
+      hidden: () => true,
+      group: 'metadata',
+    }),
   ],
   preview: {
     select: {
