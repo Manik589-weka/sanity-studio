@@ -1,22 +1,35 @@
 # Restore Meta Title & Meta Description from legacy `seo` object
 
-After the schema change to top-level **Meta Title** and **Meta Description**, existing content stayed in the old `seo` object. To make that content visible again in the Studio:
+Existing blog content is still in the old `seo` object. To show it in the **Meta Title** and **Meta Description** fields, do these two steps once.
 
-1. **Preview (optional)**  
-   From the project root:
-   ```bash
-   npm run migrate:seo-to-meta:dry
-   ```
-   This only logs what would be updated.
+## 1. Deploy the schema
 
-2. **Run the migration**  
-   From the project root:
-   ```bash
-   npm run migrate:seo-to-meta
-   ```
-   You may be prompted to log in to Sanity. The script copies `seo.metaTitle` → `metaTitle` and `seo.metaDescription` → `metaDescription` for every blog post that has `seo` data and empty top-level fields.
+From the project root:
 
-3. **Dataset**  
-   The script uses the dataset in `sanity.cli.ts` (default: **production**). To run on **dev**, temporarily set `dataset: 'dev'` in `sanity.cli.ts`, run the migration, then change it back if needed.
+```bash
+npx sanity schema deploy
+```
 
-After the migration, refresh the document in the Studio; Meta Title and Meta Description should show the previous values.
+Select the project/dataset you use (e.g. **production**). This makes the API accept the new `metaTitle` and `metaDescription` fields.
+
+## 2. Run the migration
+
+From the project root:
+
+```bash
+npm run migrate:seo-to-meta
+```
+
+You may be prompted to log in. The script copies `seo.metaTitle` → `metaTitle` and `seo.metaDescription` → `metaDescription` for every blog post that has that data. It updates both published and draft documents.
+
+## After that
+
+Refresh any open blog post in Studio. Meta Title and Meta Description will show the previous values.
+
+**Optional:** To see what would be updated without changing anything, run:
+
+```bash
+npm run migrate:seo-to-meta:dry
+```
+
+**Different dataset (e.g. dev):** Set `dataset: 'dev'` in `sanity.cli.ts`, run the migration, then change it back if needed.

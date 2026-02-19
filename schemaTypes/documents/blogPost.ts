@@ -1,6 +1,5 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {FiEdit} from 'react-icons/fi'
-import {MetaFieldWithLegacySeoInput} from '../../components/MetaFieldWithLegacySeoInput'
 import {portableTextConfig} from '../objects/portableTextConfig'
 
 export default defineType({
@@ -163,11 +162,8 @@ export default defineType({
       options: {
         aiAssist: {},
       },
-      components: {
-        input: MetaFieldWithLegacySeoInput as any,
-      },
       description:
-        'Override the document title for search engines (50–60 characters). Defaults from SEO Defaults when empty.',
+        'Override the document title for search engines (50–60 characters). Defaults from SEO Defaults when empty. To restore old values from the previous SEO block, run the migration in docs/MIGRATION_SEO_TO_META.md.',
       initialValue: async (_params: Record<string, unknown>, context: {getClient: (opts: {apiVersion: string}) => {fetch: (query: string) => Promise<{metaTitle?: string} | null>}}) => {
         const client = context.getClient({apiVersion: '2024-01-01'})
         const doc = await client.fetch(
@@ -186,11 +182,8 @@ export default defineType({
       options: {
         aiAssist: {},
       },
-      components: {
-        input: MetaFieldWithLegacySeoInput as any,
-      },
       description:
-        'Brief description for search engines (120–160 characters). Defaults from SEO Defaults when empty.',
+        'Brief description for search engines (120–160 characters). Defaults from SEO Defaults when empty. To restore old values from the previous SEO block, run the migration in docs/MIGRATION_SEO_TO_META.md.',
       initialValue: async (_params: Record<string, unknown>, context: {getClient: (opts: {apiVersion: string}) => {fetch: (query: string) => Promise<{metaDescription?: string} | null>}}) => {
         const client = context.getClient({apiVersion: '2024-01-01'})
         const doc = await client.fetch(
