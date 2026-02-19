@@ -28,6 +28,7 @@ async function main() {
 
   for (const doc of docs) {
     const patches: Record<string, unknown> = {}
+    // Copy from seo object to top-level so content appears in Meta Title / Meta Description
     if (doc.seoTitle && !doc.metaTitle) patches.metaTitle = doc.seoTitle
     if (doc.seoDescription && !doc.metaDescription) patches.metaDescription = doc.seoDescription
 

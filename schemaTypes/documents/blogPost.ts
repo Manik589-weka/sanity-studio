@@ -1,5 +1,6 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {FiEdit} from 'react-icons/fi'
+import {MetaFieldWithLegacySeoInput} from '../../components/MetaFieldWithLegacySeoInput'
 import {portableTextConfig} from '../objects/portableTextConfig'
 
 export default defineType({
@@ -162,8 +163,18 @@ export default defineType({
       options: {
         aiAssist: {},
       },
+      components: {
+        input: MetaFieldWithLegacySeoInput as any,
+      },
       description:
-        'Override the document title for search engines (50–60 characters). AI: Create SEO title using list of keywords, Body, and SEO best practices in fewer than 60 characters.',
+        'Override the document title for search engines (50–60 characters). Defaults from SEO Defaults when empty.',
+      initialValue: async (_params: Record<string, unknown>, context: {getClient: (opts: {apiVersion: string}) => {fetch: (query: string) => Promise<{metaTitle?: string} | null>}}) => {
+        const client = context.getClient({apiVersion: '2024-01-01'})
+        const doc = await client.fetch(
+          `*[_type == "seoDefaults"][0]{ "metaTitle": metaTitle }`
+        ) as {metaTitle?: string} | null
+        return doc?.metaTitle ?? ''
+      },
       validation: (Rule) => Rule.max(60).warning('Keep meta titles under 60 characters'),
       group: 'metadata',
     }),
@@ -175,8 +186,18 @@ export default defineType({
       options: {
         aiAssist: {},
       },
+      components: {
+        input: MetaFieldWithLegacySeoInput as any,
+      },
       description:
-        'Brief description for search engines (120–160 characters). AI: Create SEO description using list of keywords, Body, and SEO best practices in fewer than 160 characters.',
+        'Brief description for search engines (120–160 characters). Defaults from SEO Defaults when empty.',
+      initialValue: async (_params: Record<string, unknown>, context: {getClient: (opts: {apiVersion: string}) => {fetch: (query: string) => Promise<{metaDescription?: string} | null>}}) => {
+        const client = context.getClient({apiVersion: '2024-01-01'})
+        const doc = await client.fetch(
+          `*[_type == "seoDefaults"][0]{ "metaDescription": metaDescription }`
+        ) as {metaDescription?: string} | null
+        return doc?.metaDescription ?? ''
+      },
       validation: (Rule) =>
         Rule.max(160)
           .min(120)
